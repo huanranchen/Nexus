@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="RLCER: Reinforcing Chain-of-Thought Reasoning with Self-Evolving Rubrics" />
+  <meta name="keywords" content="RLCER, chain-of-thought, reinforcement learning, rubric reward, LLM reasoning" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RLCER: Reinforcing Chain-of-Thought Reasoning with Self-Evolving Rubrics</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/bulma.min.css" />
+  <link rel="stylesheet" href="./css/bulma-carousel.min.css" />
+  <link rel="stylesheet" href="./css/bulma-slider.min.css" />
+  <link rel="stylesheet" href="./css/fontawesome.all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/enhanced-styles.css" />
+  <link rel="stylesheet" href="./css/final-enhancements.css" />
+  <link rel="stylesheet" href="./css/navbar-fix.css" />
+  <link rel="stylesheet" href="./css/navbar-alignment-fix.css" />
+  <link rel="stylesheet" href="./css/overlap-fix.css" />
+  <link rel="stylesheet" href="./css/spacing-fix.css" />
+  <link rel="stylesheet" href="./css/author-affiliation-styles.css" />
+  <link rel="icon" href="./figs/seed_logo.png" type="image/png" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./js/fontawesome.all.min.js"></script>
+  <script src="./js/bulma-carousel.min.js"></script>
+  <script src="./js/bulma-slider.min.js"></script>
+  <script src="./js/index.js"></script>
+  <script src="./js/enhanced-animations.js"></script>
+</head>
+
+<body>
+  <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="#">
+          <img src="figs/seed_logo.png" alt="Seed logo" style="height: 1.5rem; max-height: unset;" class="left-logo">
+          | RLCER
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <a class="navbar-item" href="#introduction">Introduction</a>
+          <a class="navbar-item" href="#method">Method</a>
+          <a class="navbar-item" href="#experiments">Experiments</a>
+          <a class="navbar-item" href="#limitations">Limitations</a>
+          <a class="navbar-item" href="#conclusion">Conclusion</a>
+          <a class="navbar-item" href="#citation">Citation</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container">
+        <div class="has-text-centered">
+          <h1 class="publication-title">
+            <span><em class="dnerf">RLCER</em>: Reinforcing Chain-of-Thought Reasoning with Self-Evolving Rubrics</span>
+          </h1>
+
+          <div class="publication-authors">
+            <span class="author-block">Leheng Sheng<sup>1,2,*</sup></span>
+            <span class="author-block">Wenchang Ma<sup>1,*</sup></span>
+            <span class="author-block">Ruixin Hong<sup>1</sup></span>
+            <span class="author-block">Xiang Wang<sup>3</sup></span>
+            <span class="author-block">An Zhang<sup>3,&#8224;</sup></span>
+            <span class="author-block">Tat-Seng Chua<sup>2</sup></span>
+          </div>
+
+          <div class="publication-affiliations">
+            <span class="affiliation-block"><sup>1</sup>Seed, ByteDance</span><br>
+            <span class="affiliation-block"><sup>2</sup>National University of Singapore</span><br>
+            <span class="affiliation-block"><sup>3</sup>University of Science and Technology of China</span><br>
+            <span class="affiliation-block"><sup>*</sup>Equal Contribution&nbsp;&nbsp; <sup>&#8224;</sup>Corresponding Author</span>
+          </div>
+
+          <div class="publication-links">
+            <span class="link-block">
+              <a class="button is-dark" href="https://www.arxiv.org/pdf/2602.10885" target="_blank" rel="noopener">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>Paper (PDF)</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <span class="button is-dark is-static">
+                <span class="icon"><i class="fas fa-code"></i></span>
+                <span>Code (TBD)</span>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="introduction">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-10">
+          <h2 class="title is-3">Introduction</h2>
+          <div class="content">
+            <p>
+              Chain-of-thought (CoT) reasoning is essential for solving complex tasks with large language models, yet
+              outcome-centric reinforcement learning with verifiable rewards (RLVR) mainly optimizes final-answer correctness.
+              This leaves CoT quality under-supervised and may push optimization toward shortcut or brittle reasoning strategies.
+            </p>
+            <p>
+              RLCER addresses this gap by explicitly rewarding how models think. It introduces self-proposed and
+              self-evolving rubrics as natural-language supervision criteria for CoT. The core question is whether the
+              policy itself can generate valid CoT rubrics and continuously improve them during training without human annotations.
+            </p>
+            <p>
+              The framework empowers RLVR to move beyond pure outcome reward: reasoning trajectories are rewarded by rubric
+              satisfaction, while rubric generation quality is also optimized, enabling autonomous CoT supervision.
+            </p>
+
+            <figure class="image" style="max-width: 950px; margin: 2rem auto;">
+              <img src="figs/rlcer_teaser.png" alt="RLCER teaser">
+              <figcaption>
+                <span>Key idea: self-proposed and self-evolving rubrics for CoT supervision.</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="method">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-10">
+          <h2 class="title is-3">Method</h2>
+          <div class="content">
+            <h4><strong>Two Roles in One Policy</strong></h4>
+            <p>
+              RLCER uses a shared policy with two prompted roles: a <strong>reasoner</strong> that generates CoT and final answers,
+              and a <strong>rubricator</strong> that proposes textual rubrics and scores for evaluating CoT quality. A frozen verifier
+              checks whether a CoT satisfies each rubric.
+            </p>
+
+            <h4><strong>Rewarding How to Think</strong></h4>
+            <p>
+              The reasoner receives a combined reward from outcome correctness and rubric-based CoT quality.
+              A rubric is treated as valid when its satisfaction pattern is positively correlated with answer correctness
+              and remains discriminative across rollouts.
+            </p>
+
+            <h4><strong>Self-Evolving Rubric Generation</strong></h4>
+            <p>
+              The rubricator is rewarded by the fraction of valid rubrics among all generated rubrics, plus a format reward.
+              This drives rubric generation to evolve toward more informative and less saturated supervision criteria over time.
+            </p>
+
+            <figure class="image" style="max-width: 1000px; margin: 2rem auto;">
+              <img src="figs/rlcer_key_idea.png" alt="RLCER key idea">
+              <figcaption>
+                <span>The RLCER training loop with reasoner and rubricator roles.</span>
+              </figcaption>
+            </figure>
+
+            <figure class="image" style="max-width: 1000px; margin: 2rem auto;">
+              <img src="figs/rlcer_main_figure.png" alt="RLCER reward process">
+              <figcaption>
+                <span>Reward computation for reasoner and rubricator in RLCER.</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="experiments">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-10">
+          <h2 class="title is-3">Experiments</h2>
+          <div class="content">
+            <p>
+              We evaluate RLCER on math and knowledge reasoning benchmarks including AIME24, AIME25, AMC23,
+              GPQA-Diamond, and SuperGPQA subsets, using Qwen 4B/8B backbones. Training is based on DAPO-Math-17k
+              and evaluated with pass@1 under multi-sample decoding.
+            </p>
+            <p>
+              Results show that self-proposed rubrics provide meaningful learning signals even without outcome rewards.
+              When combined with outcome reward, RLCER consistently outperforms vanilla RLVR across datasets and scales,
+              and self-evolving rubric optimization further strengthens reasoning performance.
+            </p>
+
+            <figure class="image" style="max-width: 950px; margin: 2rem auto;">
+              <img src="figs/rlcer_evolving_abl_perf.png" alt="RLCER performance dynamics">
+              <figcaption>
+                <span>Performance dynamics during training with self-evolving rubrics.</span>
+              </figcaption>
+            </figure>
+
+            <div class="columns">
+              <div class="column">
+                <figure class="image" style="max-width: 460px; margin: 1rem auto;">
+                  <img src="figs/rlcer_amc23_rubric_only.png" alt="AMC23 rubric-only">
+                  <figcaption><span>Rubric-only training on AMC23.</span></figcaption>
+                </figure>
+              </div>
+              <div class="column">
+                <figure class="image" style="max-width: 460px; margin: 1rem auto;">
+                  <img src="figs/rlcer_aime25_rubric_only.png" alt="AIME25 rubric-only">
+                  <figcaption><span>Rubric-only training on AIME25.</span></figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="limitations">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-10">
+          <h2 class="title is-3">Limitations</h2>
+          <div class="content">
+            <p>
+              RLCER introduces an additional rubricator role, increasing rollout burden and training cost.
+              Also, current validation focuses on RLVR scenarios with verifiable outcomes; transfer to non-verifiable
+              domains remains an open direction.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="conclusion">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-10">
+          <h2 class="title is-3">Conclusion</h2>
+          <div class="content">
+            <p>
+              Outcome-centric RLVR improves final-answer accuracy but often overlooks direct CoT supervision.
+              RLCER augments RLVR with self-proposed, self-evolving rubrics to reward reasoning trajectories without
+              human annotation. Across datasets and model sizes, this approach yields consistent gains over outcome-only
+              RLVR, suggesting a practical path toward more autonomous reasoning improvement.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="citation">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-10">
+          <h2 class="title is-3">Citation</h2>
+          <div class="content">
+<pre><code>@article{sheng2026rlcer,
+  title   = {Reinforcing Chain-of-Thought Reasoning with Self-Evolving Rubrics},
+  author  = {Sheng, Leheng and Ma, Wenchang and Hong, Ruixin and Wang, Xiang and Zhang, An and Chua, Tat-Seng},
+  journal = {arXiv preprint arXiv:2602.10885},
+  year    = {2026}
+}
+</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>Website source adapted for the RLCER project page.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
